@@ -19,7 +19,7 @@ class Processor(base.Processor):
         throw an Exception if the validation does not succeed.
         """
         super(Processor, self)._validate_request()
-        if not '.zendesk.com/access/saml' in self._request_params['ACS_URL']:
+        if not '/access/saml' in self._request_params['ACS_URL']:
             raise exceptions.CannotHandleAssertion('AssertionConsumerService is not a Zendesk URL.')
 
     def _format_assertion(self):
