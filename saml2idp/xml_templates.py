@@ -43,11 +43,10 @@ SIGNATURE = (
 )
 
 # Attributes and AttributeStatement
+
 ATTRIBUTE = (
     '<saml:Attribute Name="${ATTRIBUTE_NAME}">'
-        '<saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" '
-        'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
-        'xsi:type="xs:string">${ATTRIBUTE_VALUE}</saml:AttributeValue>'
+        '<saml:AttributeValue>${ATTRIBUTE_VALUE}</saml:AttributeValue>'
     '</saml:Attribute>'
 )
 
