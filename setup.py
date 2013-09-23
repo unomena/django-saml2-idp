@@ -14,7 +14,8 @@ setup(
     ],
     tests_require=[
         'django-setuptest>=0.1.2',
-        'pysqlite>=2.5'
+        'pysqlite>=2.5',
+        'BeautifulSoup==3.2.1',
     ],
     test_suite="setuptest.setuptest.SetupTestSuite",
     include_package_data=True,
