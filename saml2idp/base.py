@@ -266,3 +266,23 @@ class Processor(object):
             'PROVIDER_NAME': '',
         }
         self._relay_state = url
+
+    def init_deep_link_vartopia(self, request, sp_config, url):
+        """
+        Initialize this Processor to make an IdP-initiated call to the SP's
+        deep-linked URL.
+        """
+        self._reset(request, sp_config)
+        acs_url = self._sp_config['acs_url']
+        # NOTE: The following request params are made up. Some are blank,
+        # because they comes over in the AuthnRequest, but we don't have an
+        # AuthnRequest in this case:
+        # - Destination: Should be this IdP's SSO endpoint URL. Not used in the response?
+        # - ProviderName: According to the spec, this is optional.
+        provider_name = ''
+        self._request_params = {
+            'ACS_URL': acs_url,
+            'DESTINATION': '',
+            'PROVIDER_NAME': 'VartopiaServiceProvider',
+        }
+        self._relay_state = url
