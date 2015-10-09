@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 
 from saml2idp.views import descriptor, login_begin, login_init, login_process, logout
 from metadata import get_deeplink_resources
