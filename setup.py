@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='saml2idp',
-    version='0.0.5',
+    version='0.0.6',
     description='SAML 2.0 Django Application',
     long_description = open('README.rst', 'r').read() + open('AUTHORS.rst', 'r').read(),
     author='Unomena',
@@ -16,6 +16,7 @@ setup(
         'django-setuptest>=0.1.2',
         'pysqlite>=2.5',
         'BeautifulSoup==3.2.1',
+        'django>=1.8.0'
     ],
     test_suite="setuptest.setuptest.SetupTestSuite",
     include_package_data=True,
