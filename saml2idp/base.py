@@ -116,7 +116,7 @@ class Processor(object):
         """
         Encodes _response_xml to _encoded_xml.
         """
-        self._saml_response = codex.nice64(self._response_xml)
+        self._saml_response = codex.nice64(self._response_xml.encode('utf-8'))
 
     def _extract_saml_request(self):
         """
