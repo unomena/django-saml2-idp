@@ -34,7 +34,7 @@ def get_signature_xml(subject, reference_uri):
 
     # Hash the subject.
     subject_hash = hashlib.sha1()
-    subject_hash.update(subject)
+    subject_hash.update(subject.encode('utf-8'))
     subject_digest = nice64(subject_hash.digest())
     logging.debug('Subject digest: ' + subject_digest)
 
