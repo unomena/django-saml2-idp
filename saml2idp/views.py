@@ -54,6 +54,7 @@ def login_begin(request, *args, **kwargs):
         request.session['RelayState'] = source['relaystate']
     return redirect('idp_login_process')
 
+@csrf_exempt
 @login_required
 def login_init(request, resource, **kwargs):
     """
