@@ -1,9 +1,5 @@
-# Python imports:
-import base64
 import logging
-import time
-import uuid
-# Django/other library imports:
+
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ImproperlyConfigured
@@ -11,29 +7,49 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
-# saml2idp app imports:
+
 import saml2idp_metadata
 import exceptions
 import metadata
 import registry
 import xml_signing
 
+
 def _generate_response(request, processor):
     """
     Generate a SAML response using processor and return it in the proper Django
     response.
     """
-    try:
-        tv = processor.generate_response()
-    except exceptions.UserNotAuthorized:
-        return render_to_response('saml2idp/invalid_user.html',
-                                  context_instance=RequestContext(request))
+    if processor:
+        try:
+            tv = processor.generate_response()
+        except exceptions.UserNotAuthorized:
+            return render_to_response(
+                'saml2idp/invalid_user.html',
+                context_instance=RequestContext(request)
+            )
+    else:
+        return render_to_response(
+            'saml2idp/invalid_request.html',
+            context_instance=RequestContext(request),
+            status=400
+        )
 
-    return render_to_response('saml2idp/login.html', tv,
-                                context_instance=RequestContext(request))
+    return render_to_response(
+        'saml2idp/login.html',
+        tv,
+        context_instance=RequestContext(request)
+    )
+
 
 def xml_response(request, template, tv, context_instance=None):
-    return render_to_response(template, tv, context_instance=context_instance, mimetype="application/xml")
+    return render_to_response(
+        template,
+        tv,
+        context_instance=context_instance,
+        mimetype="application/xml"
+    )
+
 
 @csrf_exempt
 def login_begin(request, *args, **kwargs):
@@ -54,6 +70,7 @@ def login_begin(request, *args, **kwargs):
         request.session['RelayState'] = source['relaystate']
     return redirect('idp_login_process')
 
+
 @csrf_exempt
 @login_required
 def login_init(request, resource, **kwargs):
@@ -67,7 +84,10 @@ def login_init(request, resource, **kwargs):
         linkdict = dict(metadata.get_links(sp_config))
         pattern = linkdict[resource]
     except KeyError:
-        raise ImproperlyConfigured('Cannot find link resource in SAML2IDP_REMOTE setting: "%s"' % resource)
+        raise ImproperlyConfigured(
+            'Cannot find link resource in SAML2IDP_REMOTE setting: "%s"'
+            % resource
+        )
     is_simple_link = ('/' not in resource)
     if is_simple_link:
         simple_target = kwargs['target']
@@ -77,17 +97,19 @@ def login_init(request, resource, **kwargs):
     proc.init_deep_link(request, sp_config, url)
     return _generate_response(request, proc)
 
+
 @login_required
 def login_process(request):
     """
     Processor-based login continuation.
     Presents a SAML 2.0 Assertion for POSTing back to the Service Provider.
     """
-    #reg = registry.ProcessorRegistry()
+    # reg = registry.ProcessorRegistry()
     logging.debug("Request: %s" % request)
-    
+
     proc = registry.find_processor(request)
     return _generate_response(request, proc)
+
 
 @csrf_exempt
 def logout(request):
@@ -98,8 +120,11 @@ def logout(request):
     """
     auth.logout(request)
     tv = {}
-    return render_to_response('saml2idp/logged_out.html', tv,
-                                context_instance=RequestContext(request))
+    return render_to_response(
+        'saml2idp/logged_out.html', tv,
+        context_instance=RequestContext(request)
+    )
+
 
 @login_required
 @csrf_exempt
@@ -109,16 +134,18 @@ def slo_logout(request):
     logs out the user and returns a standard logged-out page.
     """
     request.session['SAMLRequest'] = request.POST['SAMLRequest']
-    #TODO: Parse SAML LogoutRequest from POST data, similar to login_process().
-    #TODO: Add a URL dispatch for this view.
-    #TODO: Modify the base processor to handle logouts?
-    #TODO: Combine this with login_process(), since they are so very similar?
-    #TODO: Format a LogoutResponse and return it to the browser.
-    #XXX: For now, simply log out without validating the request.
+    # TODO: Parse SAML LogoutRequest from POST data, similar to login_process()
+    # TODO: Add a URL dispatch for this view.
+    # TODO: Modify the base processor to handle logouts?
+    # TODO: Combine this with login_process(), since they are so very similar?
+    # TODO: Format a LogoutResponse and return it to the browser.
+    # XXX: For now, simply log out without validating the request.
     auth.logout(request)
     tv = {}
-    return render_to_response('saml2idp/logged_out.html', tv,
-                               context_instance=RequestContext(request))
+    return render_to_response(
+        'saml2idp/logged_out.html', tv,
+        context_instance=RequestContext(request)
+    )
 
 
 def descriptor(request):
@@ -137,5 +164,9 @@ def descriptor(request):
         'sso_url': sso_url,
 
     }
-    return xml_response(request, 'saml2idp/idpssodescriptor.xml', tv,
-                                context_instance=RequestContext(request))
+    return xml_response(
+        request,
+        'saml2idp/idpssodescriptor.xml',
+        tv,
+        context_instance=RequestContext(request)
+    )
