@@ -1,4 +1,4 @@
-from django.conf.urls import *
+from django.conf.urls import url
 
 from saml2idp.views import (
     descriptor,
@@ -24,7 +24,7 @@ def deeplink_url_patterns(
     resources = get_deeplink_resources()
     new_patterns = []
     for resource in resources:
-        new_patterns += patterns(
+        new_patterns += [
             prefix,
             url(
                 url_base_pattern % resource,
@@ -33,22 +33,21 @@ def deeplink_url_patterns(
                     'resource': resource,
                 },
             )
-        )
+        ]
     return new_patterns
 
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^login/$', login_begin, name="idp_login_begin"),
     url(r'^login/process/$', login_process, name='idp_login_process'),
     url(r'^logout/$', logout, name="idp_logout"),
-    (r'^metadata/xml/$', descriptor),
+    url(r'^metadata/xml/$', descriptor),
     # For "simple" deeplinks:
     url(
         r'^init/(?P<resource>\w+)/(?P<target>\w+)/$',
         login_init,
         name="idp_login_init"
     ),
-)
+]
 # Issue 13 - Add new automagically-created URLs for deeplinks:
 urlpatterns += deeplink_url_patterns()
