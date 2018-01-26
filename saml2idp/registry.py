@@ -4,7 +4,7 @@ Registers and loads Processor classes from settings.
 
 import logging
 
-from django.utils.importlib import import_module
+from importlib import import_module
 from django.core.exceptions import ImproperlyConfigured
 
 import exceptions
