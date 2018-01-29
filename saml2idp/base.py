@@ -4,7 +4,7 @@ import logging
 import time
 import uuid
 # Django and other library imports:
-from BeautifulSoup import BeautifulStoneSoup
+from bs4 import BeautifulSoup
 from django.core.exceptions import ImproperlyConfigured
 # local app imports:
 import codex
@@ -159,8 +159,8 @@ class Processor(object):
             badXML = self._request_xml
             raise Exception('RequestXML is not valid XML; '
                             'it may need to be decoded or decompressed.')
-        soup = BeautifulStoneSoup(self._request_xml)
-        request = soup.findAll()[0]
+        soup = BeautifulSoup(self._request_xml, 'xml')
+        request = soup.find_all()[0]
         params = {}
         params['ACS_URL'] = request['assertionconsumerserviceurl']
         params['REQUEST_ID'] = request['id']

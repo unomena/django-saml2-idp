@@ -11,7 +11,7 @@ setup(
     url='http://github.com/unomena/django-saml2-idp',
     packages = find_packages(),
     install_requires = [
-        'BeautifulSoup==3.2.1',
+        "beautifulsoup4>=4.5.1",
         'django>=1.8.0',
     ],
     tests_require=[
