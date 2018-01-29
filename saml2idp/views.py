@@ -4,8 +4,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse
-from django.shortcuts import render_to_response, redirect
-from django.template import RequestContext
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
 import saml2idp_metadata
@@ -24,29 +23,29 @@ def _generate_response(request, processor):
         try:
             tv = processor.generate_response()
         except exceptions.UserNotAuthorized:
-            return render_to_response(
-                'saml2idp/invalid_user.html',
-                context_instance=RequestContext(request)
+            return render(
+                request,
+                'saml2idp/invalid_user.html'
             )
     else:
-        return render_to_response(
+        return render(
+            request,
             'saml2idp/invalid_request.html',
-            context_instance=RequestContext(request),
             status=400
         )
 
-    return render_to_response(
+    return render(
+        request,
         'saml2idp/login.html',
-        tv,
-        context_instance=RequestContext(request)
+        tv
     )
 
 
-def xml_response(request, template, tv, context_instance=None):
-    return render_to_response(
+def xml_response(request, template, tv):
+    return render(
+        request,
         template,
         tv,
-        context_instance=context_instance,
         mimetype="application/xml"
     )
 
@@ -120,9 +119,10 @@ def logout(request):
     """
     auth.logout(request)
     tv = {}
-    return render_to_response(
-        'saml2idp/logged_out.html', tv,
-        context_instance=RequestContext(request)
+    return render(
+        request,
+        'saml2idp/logged_out.html',
+        tv
     )
 
 
@@ -142,9 +142,10 @@ def slo_logout(request):
     # XXX: For now, simply log out without validating the request.
     auth.logout(request)
     tv = {}
-    return render_to_response(
-        'saml2idp/logged_out.html', tv,
-        context_instance=RequestContext(request)
+    return render(
+        request,
+        'saml2idp/logged_out.html',
+        tv
     )
 
 
@@ -167,6 +168,5 @@ def descriptor(request):
     return xml_response(
         request,
         'saml2idp/idpssodescriptor.xml',
-        tv,
-        context_instance=RequestContext(request)
+        tv
     )
