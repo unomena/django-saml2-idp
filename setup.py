@@ -12,6 +12,7 @@ setup(
     packages = find_packages(),
     install_requires = [
         "beautifulsoup4>=4.5.1",
+        "lxml>=4.1.1"
         'django>=1.8.0',
     ],
     tests_require=[

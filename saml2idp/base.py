@@ -1,6 +1,7 @@
 # core python imports:
 import base64
 import logging
+import re
 import time
 import uuid
 # Django and other library imports:
@@ -162,10 +163,19 @@ class Processor(object):
         soup = BeautifulSoup(self._request_xml, 'xml')
         request = soup.find_all()[0]
         params = {}
-        params['ACS_URL'] = request['assertionconsumerserviceurl']
-        params['REQUEST_ID'] = request['id']
-        params['DESTINATION'] = request.get('destination', '')
-        params['PROVIDER_NAME'] = request.get('providername', '')
+
+        pattern = re.compile(r'([a-zA-Z]+\="[^"]*?")')
+        for attribute in re.findall(pattern, str(request)):
+            k, v = attribute.split('=', 1)
+            if k.lower() == 'assertionconsumerserviceurl':
+                params['ACS_URL'] = v.strip('"')
+            if k.lower() == 'id':
+                params['REQUEST_ID'] = v.strip('"')
+            if k.lower() == 'destination':
+                params['DESTINATION'] = v.strip('"')
+            if k.lower() == 'providername':
+                params['PROVIDER_NAME'] = v.strip('"')
+
         self._request_params = params
 
     def _reset(self, django_request, sp_config=None):
