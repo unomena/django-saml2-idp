@@ -4,6 +4,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
@@ -61,12 +62,21 @@ def login_begin(request, *args, **kwargs):
     else:
         source = request.GET
     # Store these values now, because Django's login cycle won't preserve them.
-    try:
+
+    if source.get('SAMLRequest'):
         request.session['SAMLRequest'] = source['SAMLRequest']
-        request.session['RelayState'] = source['RelayState']
-    except:
+    elif source.get('samlrequest'):
         request.session['SAMLRequest'] = source['samlrequest']
+    else:
+        return HttpResponseBadRequest('No SAML request information provided')
+
+    if source.get('RelayState'):
+        request.session['RelayState'] = source['RelayState']
+    elif source.get('relaystate'):
         request.session['RelayState'] = source['relaystate']
+    else:
+        return HttpResponseBadRequest('No RelayState information provided')
+
     return redirect('idp_login_process')
 
 
