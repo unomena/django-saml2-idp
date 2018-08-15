@@ -8,9 +8,9 @@ import string
 # other libraries:
 import M2Crypto
 # this app:
-import saml2idp_metadata
-from codex import nice64
-from xml_templates import SIGNED_INFO, SIGNATURE
+from . import saml2idp_metadata
+from .codex import nice64
+from .xml_templates import SIGNED_INFO, SIGNATURE
 
 def load_cert_data(certificate_file):
     """

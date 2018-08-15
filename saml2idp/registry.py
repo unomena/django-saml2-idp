@@ -7,8 +7,8 @@ import logging
 from importlib import import_module
 from django.core.exceptions import ImproperlyConfigured
 
-import exceptions
-import saml2idp_metadata
+from . import exceptions
+from . import saml2idp_metadata
 
 
 logger = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ def get_processor(dottedpath):
     sp_module, sp_classname = dottedpath[:dot], dottedpath[dot + 1:]
     try:
         mod = import_module(sp_module)
-    except ImportError, e:
+    except ImportError as e:
         raise ImproperlyConfigured(
             'Error importing processors %s: "%s"' % (sp_module, e)
         )
@@ -58,7 +58,7 @@ def find_processor(request):
         try:
             if proc.can_handle(request):
                 return proc
-        except exceptions.CannotHandleAssertion, e:
+        except exceptions.CannotHandleAssertion as e:
             # Log these, but keep looking.
             logger.debug('%s %s' % (proc, e))
 

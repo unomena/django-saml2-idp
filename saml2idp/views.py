@@ -8,11 +8,11 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
-import saml2idp_metadata
-import exceptions
-import metadata
-import registry
-import xml_signing
+from . import saml2idp_metadata
+from . import exceptions
+from . import metadata
+from . import registry
+from . import xml_signing
 
 
 def _generate_response(request, processor):

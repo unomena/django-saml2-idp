@@ -34,11 +34,11 @@ class TestLoginView(TestCase):
         self.assertRaises(KeyError, lambda : self.client.post('/idp/login/'))
 
     def _test_pre_redirect(self):
-        self.assertFalse(self.client.session.has_key('SAMLRequest'))
-        self.assertFalse(self.client.session.has_key('RelayState'))
+        self.assertFalse('SAMLRequest' in self.client.session)
+        self.assertFalse('RelayState' in self.client.session)
 
     def _test_redirect(self, response):
-        self.assertEquals(response.status_code, HttpResponseRedirect.status_code)
+        self.assertEqual(response.status_code, HttpResponseRedirect.status_code)
         self.assertTrue(response['location'].endswith('/idp/login/process/'))
         self.assertEqual(self.client.session['SAMLRequest'], SAML_REQUEST)
         self.assertEqual(self.client.session['RelayState'], RELAY_STATE)

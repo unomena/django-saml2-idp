@@ -8,7 +8,7 @@ from saml2idp.views import (
     logout
 )
 
-from metadata import get_deeplink_resources
+from .metadata import get_deeplink_resources
 
 
 def deeplink_url_patterns(

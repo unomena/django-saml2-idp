@@ -4,7 +4,7 @@ Tests for the demo AttributeProcessor and IdP-initiated deep-linking.
 # standard library imports:
 import base64
 # local imports:
-import base
+from . import base
 
 class TestDeepLink(base.SamlTestCase):
     SP_CONFIG = {

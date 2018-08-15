@@ -3,9 +3,10 @@ Functions for creating XML output.
 """
 import logging
 import string
-from xml_signing import get_signature_xml
-from xml_templates import ATTRIBUTE, ATTRIBUTE_STATEMENT, \
+from .xml_signing import get_signature_xml
+from .xml_templates import ATTRIBUTE, ATTRIBUTE_STATEMENT, \
     ASSERTION_GOOGLE_APPS, ASSERTION_SALESFORCE, ASSERTION_ZENDESK, RESPONSE, SUBJECT
+
 
 def _get_attribute_statement(params):
     """
@@ -30,6 +31,7 @@ def _get_attribute_statement(params):
     stmt_template = string.Template(ATTRIBUTE_STATEMENT)
     statement = stmt_template.substitute(params)
     params['ATTRIBUTE_STATEMENT'] = statement
+
 
 def _get_in_response_to(params):
     """
@@ -80,14 +82,18 @@ def _get_assertion_xml(template, parameters, signed=False):
     logging.debug(signed)
     return signed
 
+
 def get_assertion_googleapps_xml(parameters, signed=False):
     return _get_assertion_xml(ASSERTION_GOOGLE_APPS, parameters, signed)
+
 
 def get_assertion_salesforce_xml(parameters, signed=False):
     return _get_assertion_xml(ASSERTION_SALESFORCE, parameters, signed)
 
+
 def get_assertion_zendesk_xml(parameters, signed=False):
     return _get_assertion_xml(ASSERTION_ZENDESK, parameters, signed)
+
 
 def get_response_xml(parameters, signed=False):
     """

@@ -3,7 +3,7 @@ Tests for the Google Apps processor.
 """
 # local imports:
 from .. import codex
-import base
+from . import base
 
 SAML_REQUEST = codex.deflate_and_base64_encode(
     '<?xml version="1.0" encoding="UTF-8"?>'

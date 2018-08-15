@@ -8,10 +8,10 @@ import uuid
 from bs4 import BeautifulSoup
 from django.core.exceptions import ImproperlyConfigured
 # local app imports:
-import codex
-import exceptions
-import saml2idp_metadata
-import xml_render
+from . import codex
+from . import exceptions
+from . import saml2idp_metadata
+from . import xml_render
 
 MINUTES = 60
 HOURS = 60 * MINUTES
@@ -234,7 +234,7 @@ class Processor(object):
             self._extract_saml_request()
             self._decode_request()
             self._parse_request()
-        except Exception, e:
+        except Exception as e:
             msg = 'Exception while reading request: %s' % e
             self._logger.debug(msg)
             raise exceptions.CannotHandleAssertion(msg)
