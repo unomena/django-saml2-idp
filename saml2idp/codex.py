@@ -17,4 +17,8 @@ def deflate_and_base64_encode(string_val):
 
 def nice64(src):
     """ Returns src base64-encoded and formatted nicely for our XML. """
-    return base64.b64encode(src.replace('\n', '').encode())
+    if isinstance(src, bytes):
+        value = src.decode().replace('\n', '')
+    elif isinstance(src, str):
+        value = src.replace('\n', '')
+    return base64.b64encode(value.encode())
